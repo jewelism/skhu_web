@@ -1,0 +1,11 @@
+.table th, .table td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    border-top: 1px solid #dddddd;
+}
+thead tr { background: #eee; }
+tbody tr:hover { background-color: #ffa; cursor: pointer; }
+div.form-inline { margin-bottom: 5px; }
+

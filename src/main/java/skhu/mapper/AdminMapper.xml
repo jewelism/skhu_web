@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="skhu.mapper.AdminMapper">
+	<select id="selectByLoginId" resultType="skhu.model.Admin">
+		SELECT * FROM [Admin] WHERE a_loginId=#{a_loginId}
+	</select>
+	<select id="countRequestId" resultType="Integer">
+		SELECT COUNT(*)
+		FROM [R_UpdateId]
+		WHERE ru_state='대기'
+	</select>
+	<select id="countRequestDrop" resultType="Integer">
+		SELECT COUNT(*)
+		FROM [R_UpdateId]
+		WHERE ru_state='대기'
+	</select>
+</mapper>

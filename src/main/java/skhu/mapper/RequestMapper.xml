@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+             "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+             
+<mapper namespace="skhu.mapper.RequestMapper">
+	<select id="selectRequestId" resultType="skhu.model.R_UpdateId">
+		SELECT *
+		FROM [R_UpdateId]
+		WHERE ru_id = #{ru_id}
+	</select>
+	<insert id="insert">
+        INSERT [R_UpdateId] (u_id,ru_originId,ru_updateId,ru_state,ru_content,ru_time)
+        VALUES(#{u_id},#{ru_originId},#{ru_updateId},#{ru_state},#{ru_content},#{ru_time})
+    </insert>
+    <select id="alreadyRequest" resultType="skhu.model.R_UpdateId">
+    	SELECT *
+    	FROM [R_UpdateId]
+    	WHERE u_id = #{u_id} and ru_state = '대기'
+    </select>
+    <select id="RequestIdList1" resultType="skhu.model.R_UpdateId">
+    	SELECT r.*,u.u_photo,u.u_name,u.u_status,u.u_cNumber
+    	FROM [R_UpdateId] r LEFT JOIN [User] u
+    	ON r.u_id = u.u_id
+    	WHERE r.ru_state='대기'
+    	ORDER BY r.ru_time
+    </select>
+    <select id="RequestIdList2" resultType="skhu.model.R_UpdateId">
+    	SELECT r.*,u.u_photo,u.u_name,u.u_status,u.u_cNumber
+    	FROM [R_UpdateId] r LEFT JOIN [User] u
+    	ON r.u_id = u.u_id
+    	WHERE not r.ru_state = '대기'
+    	ORDER BY r.ru_time
+    </select>
+    <update id="okRequestId">
+    	UPDATE [R_UpdateId]
+    	SET ru_state='승인'
+    	WHERE ru_id = #{ru_id}
+    	
+    	UPDATE [USER]
+    	SET u_loginId = #{ru_updateId},
+    		u_phone = #{ru_updateId}
+    	WHERE u_id = #{u_id}
+    </update>
+    <update id="noRequestId">
+    	UPDATE [R_UpdateId]
+    	SET ru_state='거절'
+    	WHERE ru_id = #{ru_id}
+    </update>    
+    <delete id="delRequestId">
+    	DELETE FROM [R_UpdateId]
+    	WHERE ru_id = #{ru_id}
+    </delete>
+    
+    
+    <select id="selectRequestDrop" resultType="skhu.model.R_DropUser">
+		SELECT *
+		FROM [R_DropUser]
+		WHERE rd_id = #{rd_id}
+	</select>
+    <select id="alreadyRequestDrop" resultType="skhu.model.R_DropUser">
+    	SELECT *
+    	FROM [R_DropUser]
+    	WHERE u_id = #{u_id} and rd_state = '대기'
+    </select>
+    <insert id="insertDrop">
+        INSERT [R_DropUser] (u_id,rd_state,rd_content,rd_time)
+        VALUES(#{u_id},#{rd_state},#{rd_content},#{rd_time})
+    </insert>
+        <select id="RequestDropList1" resultType="skhu.model.R_DropUser">
+    	SELECT r.*,u.u_photo,u.u_name,u.u_status,u.u_cNumber
+    	FROM [R_DropUser] r LEFT JOIN [User] u
+    	ON r.u_id = u.u_id
+    	WHERE r.rd_state='대기'
+    	ORDER BY r.rd_time
+    </select>
+    <select id="RequestDropList2" resultType="skhu.model.R_DropUser">
+    	SELECT r.*,u.u_photo,u.u_name,u.u_status,u.u_cNumber
+    	FROM [R_DropUser] r LEFT JOIN [User] u
+    	ON r.u_id = u.u_id
+    	WHERE not r.rd_state = '대기'
+    	ORDER BY r.rd_time
+    </select>
+    <update id="okRequestDrop">
+    	UPDATE [R_DropUser]
+    	SET rd_state='승인'
+    	WHERE rd_id = #{rd_id}
+    	
+    	UPDATE [USER]
+    	SET u_loginId = #{u_id},
+    		u_password = 'drop#1234'
+    	WHERE u_id = #{u_id}
+    </update>
+    <update id="noRequestDrop">
+    	UPDATE [R_DropUser]
+    	SET rd_state='거절'
+    	WHERE rd_id = #{rd_id}
+    </update>    
+    <delete id="delRequestDrop">
+    	DELETE FROM [R_DropUser]
+    	WHERE rd_id = #{rd_id}
+    </delete>
+    <delete id="delDropComplete">
+        DELETE FROM [USER]
+        WHERE u_id = #{u_id}
+    </delete>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+             "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="skhu.mapper.FileMapper">
+
+    <select id="r_file_selectByArticleId" resultType="skhu.model.File">
+        SELECT f_id, r_id, f_name, f_size
+        FROM   [File]
+        WHERE  r_id = #{r_id}
+    </select>
+    
+    <select id="r_file_selectByArticleId2" resultType="skhu.model.File">
+        SELECT f_id, r_id, f_name, f_size
+        FROM   [File]
+        WHERE  r_id = #{r_id}
+    </select>
+
+    <select id="r_file_selectById" resultType="skhu.model.File">
+        SELECT *
+        FROM   [File]
+        WHERE  f_id = #{f_id}
+    </select>
+
+    <insert id="r_file_insert" useGeneratedKeys="true" keyProperty="f_id">
+         insert into [file](r_id,f_name,f_size,n_id,f_data,f_extension)
+      values(#{r_id},#{f_name},#{f_size},null,#{f_data},#{f_extension})
+    </insert>
+
+    <delete id="r_file_delete">
+        DELETE [File] WHERE f_id = #{f_id}
+    </delete>
+
+    <delete id="r_file_deleteByArticleId">
+        DELETE [File] WHERE r_id = #{r_id}
+    </delete>
+
+</mapper>

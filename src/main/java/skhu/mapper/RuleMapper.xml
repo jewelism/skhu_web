@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="skhu.mapper.RuleMapper">
+
+   <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+      INSERT
+      [RULE]
+      (r_num, r_title, r_content, r_writeTime)
+      VALUES (0, #{r_title},
+      #{r_content}, GETDATE())
+   </insert>
+
+   <update id="updater_num">
+      UPDATE [RULE]
+      SET r_num = r_num + 1
+      WHERE r_id =
+      #{r_id}
+   </update>
+
+   <select id="selectCount" resultType="int">
+      SELECT COUNT(*)
+      FROM [RULE]
+      where ((#{srchType} = 0) OR
+               (#{srchType} = 1 AND CHARINDEX(#{srchText}, r_title) = 1) OR
+                (#{srchType} = 2 AND CHARINDEX(#{srchText}, r_content) = 1)
+             )
+   </select>
+
+   <select id="selectPage" resultType="skhu.model.Rule">
+   <![CDATA[
+        SELECT *
+        FROM (select *,ROW_NUMBER() OVER (ORDER BY r_id desc) no
+             from [RULE]
+             where ((#{srchType} = 0) OR
+                  (#{srchType} = 1 AND CHARINDEX(#{srchText}, r_title) = 1) OR
+                  (#{srchType} = 2 AND CHARINDEX(#{srchText}, r_content) = 1)
+             )) subquery
+        WHERE no>(#{currentPage}-1)*#{pageSize} AND NO<=#{currentPage}*#{pageSize}
+        order by no 
+        ]]>
+   </select>
+   <select id="selectById" resultType="skhu.model.Rule">
+      SELECT *
+      FROM [RULE]
+      WHERE r_id
+      = #{r_id}
+   </select>
+   <delete id="delete">
+      DELETE FROM [RULE] WHERE r_id = #{r_id}
+   </delete>
+
+   <update id="updateRule">
+      UPDATE [RULE]
+      SET r_title = #{r_title}, r_content =
+      #{r_content}, r_writeTime =
+      GETDATE()
+      WHERE r_id = #{r_id}
+   </update>
+   <select id="Rule_max" resultType="int">
+      select max(r_id)
+      from [RULE]
+   </select>
+
+</mapper>
